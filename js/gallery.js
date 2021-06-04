@@ -1,7 +1,5 @@
 import galleryItems from "./gallery-items.js";
 
-/* - Создание и рендер разметки по массиву данных и предоставленному шаблону. */
-
 function createImagesCardsMarkup(images) {
   return images
     .map(({ preview, original, description }) => {
@@ -16,20 +14,19 @@ function createImagesCardsMarkup(images) {
     .join("");
 }
 
-const imagesList = document.querySelector("ul.js-gallery");
 const itemsImagesCardsMarkup = createImagesCardsMarkup(galleryItems);
 
+const imagesList = document.querySelector("ul.js-gallery");
 imagesList.insertAdjacentHTML("beforeend", itemsImagesCardsMarkup);
-
-/* - Реализация делегирования на галерее `ul.js-gallery` и получение `url` большого изображения. */
-
 imagesList.addEventListener("click", onImagesListClick);
+
+const lightboxEl = document.querySelector(".lightbox");
+const lightboxImageEl = document.querySelector(".lightbox__image");
 
 function onImagesListClick(event) {
   event.preventDefault();
 
   const isImageSwatchEl = event.target.classList.contains("gallery__image");
-
   if (!isImageSwatchEl) {
     return;
   }
@@ -39,35 +36,30 @@ function onImagesListClick(event) {
 
   onСhangeValueAttributeEl(attributeSwatchEl);
   onGalleryOpenLightBox();
-
-  onGalleryCloseLightBox();
 }
 
-/* - Открытие модального окна по клику на элементе галереи. is-open */
-
-function onGalleryOpenLightBox() {
-  const lightboxEl = document.querySelector(".lightbox");
+const onGalleryOpenLightBox = () => {
   lightboxEl.classList.add("is-open");
+};
 
-  return lightboxEl;
-}
-
-/* - Подмена значения атрибута `src` элемента `img.lightbox__image`. */
-
-function onСhangeValueAttributeEl(value) {
-  const lightboxImageEl = document.querySelector(".lightbox__image");
+const onСhangeValueAttributeEl = (value) => {
   lightboxImageEl.src = `${value}`;
+};
+
+const closeBtnEl = document.querySelector(
+  'button[data-action="close-lightbox"]'
+);
+closeBtnEl.addEventListener("click", onCloseBtnClick);
+
+function onCloseBtnClick(event) {
+  onGalleryCloseLightBox();
+  onCleasValueAttributeEl();
 }
 
-/* Закрытие модального окна по клику на кнопку `button[data-action="close-lightbox"]`. */
+const onGalleryCloseLightBox = () => {
+  lightboxEl.classList.remove("is-open");
+};
 
-function onGalleryCloseLightBox() {
-  const closeBtnEl = document.querySelector(
-    '.lightbox button[data-action="close-lightbox"]'
-  );
-
-  const closeBtnAction = closeBtnEl.dataset.action;
-  console.log(closeBtnAction); //close-lightbox
-
-  return closeBtnAction;
-}
+const onCleasValueAttributeEl = () => {
+  lightboxImageEl.src = "";
+};
